@@ -1,0 +1,45 @@
+import java.util.Scanner;
+
+public class MaximalSquare {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter the matrix (each row as comma-separated values, rows separated by semicolon): ");
+        String input = scanner.nextLine();
+
+        String[] rows = input.split(";");
+        char[][] matrix = new char[rows.length][];
+        for (int i = 0; i < rows.length; i++) {
+            matrix[i] = rows[i].replaceAll("\"", "").toCharArray();
+        }
+
+        int maxSize = maximalSquare(matrix);
+
+        System.out.println("Size of the largest square: " + maxSize);
+
+        scanner.close();
+    }
+
+    private static int maximalSquare(char[][] matrix) {
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return 0;
+        }
+
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+
+        int[][] dp = new int[rows + 1][cols + 1];
+        int maxSize = 0;
+
+        for (int i = 1; i <= rows; i++) {
+            for (int j = 1; j <= cols; j++) {
+                if (matrix[i - 1][j - 1] == '1') {
+                    dp[i][j] = Math.min(Math.min(dp[i - 1][j], dp[i][j - 1]), dp[i - 1][j - 1]) + 1;
+                    maxSize = Math.max(maxSize, dp[i][j]);
+                }
+            }
+        }
+
+        return maxSize * maxSize;
+    }
+}
